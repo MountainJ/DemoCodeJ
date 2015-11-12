@@ -18,12 +18,11 @@
 {
     self = [super initWithFrame:frame];
     if (self) {
-        
     }
     return self;
-
 }
 
+//图层初始化的时候会调用drawRect方法;
 - (void)drawRect:(CGRect)rect
 {
    //
@@ -38,11 +37,39 @@
     CGContextAddArc(context, 100, 30, 30, 0, 2*M_PI, 0);
     CGContextDrawPath(context, kCGPathEOFillStroke);
     // 画线
-    CGPoint aPoint[2];
-    aPoint[0] =CGPointMake(20, 80);
-    aPoint[1]  =CGPointMake(130, 80);
-    CGContextAddLines(context, aPoint, 2);
-    CGContextDrawPath(context, kCGPathFillStroke);
+    /*写法一*/
+//    CGPoint aPoint[2];
+//    aPoint[0] =CGPointMake(20, 80);
+//    aPoint[1]  =CGPointMake(130, 80);
+//    CGContextAddLines(context, aPoint, 2);
+//    CGContextDrawPath(context, kCGPathFillStroke);
+    /*写法二,方法二比较三而言,可读性不是很好.*/
+//    CGContextMoveToPoint(context, 20, 80);
+//    CGContextAddLineToPoint(context, 130, 80);
+//    CGContextStrokePath(context);
+    /*写法三 ,方法三相比较于方法二的好处是,如果需要绘制多个路径,就可以增加Path*/
+    /*
+     1.创建路径对象;  CGMutablePathRef
+     2.设置路径起点以及绘制路径终点;CGPathMoveToPoint/CGPathAddLineToPoint
+     3.路径path添加到上下文中;CGContextAddPath
+     4.绘制路径;CGContextStrokePath
+     5.释放路径;CGPathRelease
+     */
+    CGMutablePathRef path = CGPathCreateMutable();
+    CGPathMoveToPoint(path, NULL, 20, 80);
+    CGPathAddLineToPoint(path, NULL, 130, 80);
+    CGContextAddPath(context, path);
+    CGContextStrokePath(context);
+    CGPathRelease(path);
+    
+    CGMutablePathRef path1=CGPathCreateMutable();
+    //画出的圆的中心点是这个矩形的中心点;
+//    CGPathAddEllipseInRect(path1, NULL, CGRectMake(50, 90, 50, 50));
+    /*先确定第一个点,再确定第二个点,然后确定方向,再渲染...画出圆弧*/
+    CGPathAddArc(path1, NULL, 50, 50, 10, 0, 6*M_PI_4, NO);
+    CGContextAddPath(context, path1);
+    CGContextDrawPath(context, kCGPathEOFillStroke);
+    CGPathRelease(path1);
     // 画圆弧
     CGContextSetRGBStrokeColor(context, 0, 0, 1, 0.9);
     CGContextMoveToPoint(context, 140, 80);
@@ -104,13 +131,12 @@
     CGContextDrawPath(context, kCGPathFillStroke);
     /*画贝塞尔曲线*/
     CGContextMoveToPoint(context, 100, 300);
-    CGContextAddQuadCurveToPoint(context, 190, 310, 120, 390);
+    CGContextAddQuadCurveToPoint(context, 250, 310, 120, 390);
     CGContextStrokePath(context);
     
     /*画圆角矩形*/
     float fw = 180;
     float fh = 280;
-    
     CGContextMoveToPoint(context, fw, fh-20);  // 开始坐标右边开始
     CGContextAddArcToPoint(context, fw, fh, fw-20, fh, 10);  // 右下角角度
     CGContextAddArcToPoint(context, 120, fh, 120, fh-20, 10); // 左下角角度
@@ -120,11 +146,11 @@
     CGContextDrawPath(context, kCGPathFillStroke); //根据坐标绘制路径
      /*图片绘图*/
     self.img=[UIImage imageNamed:@"002"];
-    
     [self.img drawInRect:CGRectMake(60, 340, self.img.size.width  , self.img.size.height)];
     CGContextDrawImage(context, CGRectMake(100, 340, 20, 20), self.img.CGImage);
     
 //    CGContextDrawTiledImage(context, CGRectMake(0, 0, 20, 20), img.CGImage);//平铺图
+   
     
     
 }

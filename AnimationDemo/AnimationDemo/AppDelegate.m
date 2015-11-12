@@ -7,6 +7,7 @@
 //
 
 #import "AppDelegate.h"
+#import "ViewController.h"
 
 @interface AppDelegate ()
 
@@ -17,6 +18,46 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
+//    CGSize viewSize = self.window.bounds.size;
+//    NSString *viewOrientation = @"Portrait";    //横屏请设置成 @"Landscape"
+//    NSString *launchImage = nil;
+//    NSArray* imagesDict = [[[NSBundle mainBundle] infoDictionary] valueForKey:@"UILaunchImages"];
+//    for (NSDictionary* dict in imagesDict)
+//    {
+//        CGSize imageSize = CGSizeFromString(dict[@"UILaunchImageSize"]);
+//        
+//        if (CGSizeEqualToSize(imageSize, viewSize) && [viewOrientation isEqualToString:dict[@"UILaunchImageOrientation"]])
+//        {
+//            launchImage = dict[@"UILaunchImageName"];
+//        }
+//    }
+//    UIImageView *launchView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:launchImage]];
+//    launchView.frame = self.window.bounds;
+//    launchView.contentMode = UIViewContentModeScaleAspectFill;
+//    [self.window addSubview:launchView];
+//    [UIView animateWithDuration:2.0f
+//                          delay:0.0f
+//                        options:UIViewAnimationOptionBeginFromCurrentState
+//                     animations:^{
+//                         
+//                         launchView.alpha = 0.0f;
+//                         launchView.layer.transform = CATransform3DScale(CATransform3DIdentity, 1.2, 1.2, 1);
+//                         
+//                     }
+//                     completion:^(BOOL finished) {
+//                         
+//                         [launchView removeFromSuperview];
+//                         
+//                     }];
+    self.window = [[UIWindow alloc] initWithFrame:self.window.bounds];
+    [self.window makeKeyAndVisible];
+    
+    ViewController *vc = [[ViewController alloc] init];
+    
+    UINavigationController *nvc =[[UINavigationController alloc] initWithRootViewController:vc];
+    self.window.rootViewController = nvc;
+    
+    
     return YES;
 }
 

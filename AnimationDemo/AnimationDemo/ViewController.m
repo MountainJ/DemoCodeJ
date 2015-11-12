@@ -8,11 +8,13 @@
 
 #import "ViewController.h"
 #import "CustomView.h"
+#import "SVProgressHUD.h"
 
 @interface ViewController ()
 {
     UIView *_roundRview;
     UIView *_syncImageView;
+    SVProgressHUD *progressHud;
 
 }
 @property (nonatomic,assign) CGFloat angle;
@@ -25,18 +27,57 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
-    self.view.backgroundColor =[ UIColor whiteColor];
-    //绘制一个圆进行逆时针旋转
+    self.view.backgroundColor =[ UIColor lightGrayColor];
+    self.title =@"Demo for annimation";
+     //绘制各种图线形状
+     [self drawaRojund];
+    
+//    //绘制一个圆进行逆时针旋转
 //    [self drawRoundRotation];
-//    //
-//    [self drawaRojund];
-    //
-    self.saomiao = [[UIView alloc] initWithFrame:CGRectMake(100, 100, 50, 50)];
-    self.saomiao.layer.cornerRadius = 10.0;
-    self.saomiao.layer.masksToBounds = YES;
-    self.saomiao.backgroundColor =  [UIColor greenColor];
-    [self.view addSubview:self.saomiao];
-    [self startAnimation];
+//    
+//    //一个矩形旋转
+//    [self circleGoing];
+//    //利用SV进行加载动画
+//    [self loadShow];
+    
+    
+}
+
+#pragma mark -加载动画
+- (void)loadShow
+{
+    [SVProgressHUD  showWithStatus:@"加载中..."];
+    [SVProgressHUD setCornerRadius:50];
+    [self performSelector:@selector(removeHud) withObject:nil afterDelay:3.0f];
+
+}
+- (void)removeHud
+{
+    if ([SVProgressHUD isVisible]) {
+        NSLog(@"%s",__func__);
+        [SVProgressHUD showSuccessWithStatus:@"下载完成"];
+    }
+    [SVProgressHUD dismissWithDelay:2.0f];
+
+}
+
+#pragma mark -圆旋转
+- (void)circleGoing
+{
+        self.saomiao = [[UIView alloc] initWithFrame:CGRectMake(100, 100, 50, 50)];
+        self.saomiao.layer.cornerRadius = 10.0;
+        self.saomiao.layer.masksToBounds = YES;
+        self.saomiao.backgroundColor =  [UIColor greenColor];
+        [self.view addSubview:self.saomiao];
+        [self startAnimation];
+    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapVIew:)];
+    [self.saomiao addGestureRecognizer:tap];
+}
+
+- (void)tapVIew:(id)sender
+{
+ 
+
 }
 
 -(void)startAnimation
@@ -53,19 +94,13 @@
 
 }
 
-
+#pragma mark - 绘制各种图线形状
 - (void)drawaRojund
 {
     CustomView *myView =[[CustomView alloc] initWithFrame:CGRectMake(0, 64, self.view.frame.size.width, self.view.frame.size.height-64)];
     myView.backgroundColor = [UIColor lightGrayColor];
-    
     [self.view addSubview:myView];
-    
-    
-    
-    
 }
-
 
 - (void)drawRoundRotation
 {
@@ -135,14 +170,12 @@
     
 }
 
-
 - (void)animationDidStop:(CAAnimation *)anim finished:(BOOL)flag
 {
     _roundRview.backgroundColor = [UIColor brownColor];
     _roundRview.transform = CGAffineTransformIdentity;
 
 }
-
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
