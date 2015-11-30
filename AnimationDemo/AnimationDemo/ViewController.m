@@ -10,6 +10,8 @@
 #import "CustomView.h"
 #import "SVProgressHUD.h"
 
+#import "POP.h"
+
 @interface ViewController ()
 {
     UIView *_roundRview;
@@ -19,6 +21,8 @@
 }
 @property (nonatomic,assign) CGFloat angle;
 @property (nonatomic,strong) UIView *saomiao;
+
+@property (nonatomic,strong) UIView *popView;
 
 @end
 
@@ -30,18 +34,36 @@
     self.view.backgroundColor =[ UIColor lightGrayColor];
     self.title =@"Demo for annimation";
      //绘制各种图线形状
-     [self drawaRojund];
+//     [self drawaRojund];
     
-//    //绘制一个圆进行逆时针旋转
+    //绘制一个圆进行逆时针旋转
 //    [self drawRoundRotation];
-//    
-//    //一个矩形旋转
-//    [self circleGoing];
-//    //利用SV进行加载动画
+    //一个矩形旋转
+    [self circleGoing];
+    //利用SV进行加载动画
 //    [self loadShow];
-    
+    [self popViewUse];
     
 }
+
+#pragma mark - pop view  use  Demo
+- (void)popViewUse
+{
+    
+    self.popView = [[UIView alloc] initWithFrame:CGRectMake(50, 200, 50, 50)];
+    self.popView.layer.cornerRadius = 10.0;
+    self.popView.layer.masksToBounds = YES;
+    self.popView.backgroundColor =  [UIColor greenColor];
+    [self.view addSubview:self.popView];
+    //
+    POPSpringAnimation *anSpring = [POPSpringAnimation animationWithPropertyNamed:kPOPLayerPositionX];
+    anSpring.toValue = @(self.saomiao.center.y+200);
+    anSpring.beginTime = CACurrentMediaTime() + 2.0f;
+    anSpring.springBounciness = 20.0f;
+    [self.popView pop_addAnimation:anSpring forKey:@"position"];
+
+}
+
 
 #pragma mark -加载动画
 - (void)loadShow
@@ -57,7 +79,6 @@
         NSLog(@"%s",__func__);
         [SVProgressHUD showSuccessWithStatus:@"下载完成"];
     }
-    [SVProgressHUD dismissWithDelay:2.0f];
 
 }
 
